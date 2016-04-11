@@ -11,12 +11,14 @@ public class DisplayStatsService extends Service
     public static final String EXTRA_SCREEN_STATE = "EXTRA_SCREEN_STATE";
 
     private BroadcastReceiver mReceiver;
+    private PersistenceHelper mPersistenceHelper;
 
     @Override
     public void onCreate()
     {
         super.onCreate();
         initBroadcastReceiver();
+        mPersistenceHelper = new PersistenceHelper(this);
     }
 
     private void initBroadcastReceiver()
@@ -62,9 +64,25 @@ public class DisplayStatsService extends Service
 
     private void onScreenOn()
     {
+        mPersistenceHelper.incrementWakeUpsNumber();
+        mPersistenceHelper.setLastWakeUpTime(System.currentTimeMillis());
     }
 
     private void onScreenOff()
     {
+        long upTime = getLastWakeUpDuration();
+
+        mPersistenceHelper.incrementTotalUpTime(upTime);
+
+        if (upTime > mPersistenceHelper.getLongestStreak())
+        {
+            mPersistenceHelper.setLongestStreak(upTime);
+        }
+    }
+
+    private long getLastWakeUpDuration()
+    {
+        // TODO 6: calculated last wake up duration
+        return 0;
     }
 }
