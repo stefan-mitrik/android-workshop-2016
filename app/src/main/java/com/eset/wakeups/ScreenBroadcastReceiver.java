@@ -17,6 +17,8 @@ public class ScreenBroadcastReceiver extends BroadcastReceiver
             Toast.makeText(context, context.getResources().getString(R.string.hello_toast), Toast.LENGTH_SHORT).show();
         }
 
-        // TODO 5: inform service about screen on/off broadcasts
+        Intent updateScreenStats = new Intent(context, DisplayStatsService.class);
+        updateScreenStats.putExtra(DisplayStatsService.EXTRA_SCREEN_STATE, isScreenOn);
+        context.startService(updateScreenStats);
     }
 }
