@@ -1,5 +1,6 @@
 package com.eset.wakeups;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
@@ -19,6 +20,8 @@ public class DisplayStatsService extends Service
         super.onCreate();
         initBroadcastReceiver();
         mPersistenceHelper = new PersistenceHelper(this);
+
+        // TODO 8: start foreground service
     }
 
     private void initBroadcastReceiver()
@@ -29,6 +32,25 @@ public class DisplayStatsService extends Service
 
         mReceiver = new ScreenBroadcastReceiver();
         registerReceiver(mReceiver, filter);
+    }
+
+    private Notification getNotification(int wakeUpsCount)
+    {
+        String title = getResources().getString(R.string.notification_header);
+        String body = getResources().getString(R.string.notification_body, wakeUpsCount);
+
+        // TODO 9: create notification intent
+
+        return new Notification.Builder(this)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .build();
+    }
+
+    private void refreshNotification(int wakeUpsNumber)
+    {
+        // TODO 10: refresh notification
     }
 
     @Override
@@ -66,6 +88,8 @@ public class DisplayStatsService extends Service
     {
         mPersistenceHelper.incrementWakeUpsNumber();
         mPersistenceHelper.setLastWakeUpTime(System.currentTimeMillis());
+
+        refreshNotification(mPersistenceHelper.getWakeUpsNumber());
     }
 
     private void onScreenOff()
@@ -82,7 +106,9 @@ public class DisplayStatsService extends Service
 
     private long getLastWakeUpDuration()
     {
-        // TODO 6: calculated last wake up duration
-        return 0;
+        long lastWakeUp = mPersistenceHelper.getLastWakeUpTime();
+        long now = System.currentTimeMillis();
+
+        return now - lastWakeUp;
     }
 }

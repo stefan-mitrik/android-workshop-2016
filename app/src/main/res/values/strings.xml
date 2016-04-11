@@ -2,4 +2,13 @@
     <string name="app_name">WakeUps</string>
 
     <string name="hello_toast">Hello Kitty</string>
+    <string name="wake_ups">wake ups</string>
+    <string name="wake_up_time">wake up time</string>
+    <string name="longest_streak">longest streak</string>
+
+    <string name="dummy_time">00:00:00</string>
+    <string name="dummy_number">X</string>s
+
+    <string name="notification_header">Screen monitoring active</string>
+    <string name="notification_body">Number of starts: %d</string>
 </resources>
