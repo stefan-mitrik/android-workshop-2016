@@ -1,6 +1,7 @@
 package com.eset.wakeups;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 public class MainActivity extends Activity
@@ -11,6 +12,6 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO 1: start service
+        startService(new Intent(this, DisplayStatsService.class));
     }
 }

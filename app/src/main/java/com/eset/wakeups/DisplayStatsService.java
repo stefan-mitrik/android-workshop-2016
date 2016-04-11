@@ -8,6 +8,8 @@ import android.os.IBinder;
 
 public class DisplayStatsService extends Service
 {
+    public static final String EXTRA_SCREEN_STATE = "EXTRA_SCREEN_STATE";
+
     private BroadcastReceiver mReceiver;
 
     @Override
@@ -21,8 +23,7 @@ public class DisplayStatsService extends Service
     {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
-
-        // TODO 2: add SCREEN_OFF action to intent filter
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
 
         mReceiver = new ScreenBroadcastReceiver();
         registerReceiver(mReceiver, filter);
@@ -39,5 +40,31 @@ public class DisplayStatsService extends Service
     public IBinder onBind(Intent intent)
     {
         return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        if (intent != null && intent.hasExtra(EXTRA_SCREEN_STATE))
+        {
+            if (intent.getBooleanExtra(EXTRA_SCREEN_STATE, false))
+            {
+                onScreenOn();
+            }
+            else
+            {
+                onScreenOff();
+            }
+        }
+
+        return START_STICKY;
+    }
+
+    private void onScreenOn()
+    {
+    }
+
+    private void onScreenOff()
+    {
     }
 }
