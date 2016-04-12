@@ -1,14 +1,18 @@
 package com.eset.wakeups;
 
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
 public class DisplayStatsService extends Service
 {
+    private static final int NOTIFICATION_ID = 1;
     public static final String EXTRA_SCREEN_STATE = "EXTRA_SCREEN_STATE";
 
     private BroadcastReceiver mReceiver;
@@ -21,7 +25,8 @@ public class DisplayStatsService extends Service
         initBroadcastReceiver();
         mPersistenceHelper = new PersistenceHelper(this);
 
-        // TODO 8: start foreground service
+        Notification notification = getNotification(mPersistenceHelper.getWakeUpsNumber());
+        startForeground(NOTIFICATION_ID, notification);
     }
 
     private void initBroadcastReceiver()
@@ -34,23 +39,26 @@ public class DisplayStatsService extends Service
         registerReceiver(mReceiver, filter);
     }
 
-    private Notification getNotification(int wakeUpsCount)
-    {
+    private Notification getNotification(int wakeUpsCount) {
         String title = getResources().getString(R.string.notification_header);
         String body = getResources().getString(R.string.notification_body, wakeUpsCount);
 
-        // TODO 9: create notification intent
+        Intent clickIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, clickIntent, 0);
 
         return new Notification.Builder(this)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .build();
+                .setContentIntent(pendingIntent)
+                .getNotification();
     }
 
     private void refreshNotification(int wakeUpsNumber)
     {
-        // TODO 10: refresh notification
+        Notification notification = getNotification(wakeUpsNumber);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     @Override
